@@ -1,38 +1,25 @@
 package com.sallyf.sallyf_freemarker;
 
 
-import com.sallyf.sallyf.Container.Container;
-import com.sallyf.sallyf.Container.ContainerAware;
+import com.sallyf.sallyf.Container.ContainerAwareInterface;
 import com.sallyf.sallyf.Router.Router;
-import freemarker.template.Configuration;
-import freemarker.template.TemplateExceptionHandler;
-import freemarker.template.Version;
 
-import java.io.File;
-import java.util.Locale;
-
-public class FreeMarker extends ContainerAware
+public class FreeMarker implements ContainerAwareInterface
 {
+    private final Router router;
+
     private Configuration configuration;
 
-    public FreeMarker(Container container)
+    public FreeMarker(Router router, Configuration configuration)
     {
-        super(container);
+        this.router = router;
+        this.configuration = configuration;
     }
 
     @Override
     public void initialize() throws Exception
     {
-        configuration = new Configuration();
-
-        configuration.setDirectoryForTemplateLoading(new File("/home/raphael/Documents/Code/Yuconz/resources/views"));
-
-        configuration.setIncompatibleImprovements(new Version(2, 3, 20));
-        configuration.setDefaultEncoding("UTF-8");
-        configuration.setLocale(Locale.US);
-        configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-
-        getContainer().get(Router.class).addResponseTransformer(new FreeMarkerTransformer(getContainer()));
+        router.addResponseTransformer(new FreeMarkerTransformer(this));
     }
 
     public Configuration getConfiguration()

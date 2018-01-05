@@ -1,6 +1,5 @@
 package com.sallyf.sallyf_freemarker;
 
-import com.sallyf.sallyf.Container.Container;
 import com.sallyf.sallyf.Router.ResponseTransformerInterface;
 import com.sallyf.sallyf.Server.RuntimeBag;
 import freemarker.template.Template;
@@ -9,11 +8,11 @@ import java.io.StringWriter;
 
 public class FreeMarkerTransformer implements ResponseTransformerInterface<FreeMarkerResponse, String>
 {
-    private Container container;
+    private FreeMarker freeMarker;
 
-    public FreeMarkerTransformer(Container container)
+    public FreeMarkerTransformer(FreeMarker freeMarker)
     {
-        this.container = container;
+        this.freeMarker = freeMarker;
     }
 
     @Override
@@ -25,8 +24,6 @@ public class FreeMarkerTransformer implements ResponseTransformerInterface<FreeM
     @Override
     public String transform(RuntimeBag runtimeBag, FreeMarkerResponse response) throws Exception
     {
-        FreeMarker freeMarker = container.get(FreeMarker.class);
-
         Template template = freeMarker.getConfiguration().getTemplate(response.getTemplate());
 
         StringWriter stringWriter = new StringWriter();
